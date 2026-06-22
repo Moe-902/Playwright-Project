@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "Playwright Project",
+			"path": ".."
+		},
+		{
+			"name": "pages",
+			"path": "../../../Users/lenovo/Downloads/Playwright_PageObjectModel-master/Playwright_PageObjectModel-master/pages"
+		}
+	],
+	"settings": {}
+}
