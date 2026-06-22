@@ -1,66 +1,50 @@
 pipeline {
-  agent any
-
-  environment {
-    CI = 'true'
-  }
-
-  stages {
-    stage('Checkout') {
-      steps {
-        checkout scm
-      }
-    }
-
-    stage('Install dependencies') {
-      steps {
-        script {
-          if (isUnix()) {
-            sh 'npm ci'
-          } else {
-            bat 'npm ci'
-          }
+    agent {
+        docker {
+            image 'mcr.microsoft.com/playwright:v1.XX.X-noble'
+            args '--ipc=host'
         }
-      }
     }
 
-    stage('Install Playwright browsers') {
-      steps {
-        script {
-          if (isUnix()) {
-            sh 'npx playwright install --with-deps'
-          } else {
-            bat 'npx playwright install'
-          }
+    environment {
+        CI = 'true'
+    }
+
+    options {
+        timestamps()
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+    stages {
+        stage('Verify environment') {
+            steps {
+                sh '''
+                    node --version
+                    npm --version
+                    npx --version
+                '''
+            }
         }
-      }
-    }
 
-    stage('Run tests') {
-      steps {
-        script {
-          if (isUnix()) {
-            sh 'npm run test:ci'
-          } else {
-            bat 'npm run test:ci'
-          }
+        stage('Install dependencies') {
+            steps {
+                sh 'npm ci'
+            }
         }
-      }
-    }
-  }
 
-  post {
-    always {
-      junit allowEmptyResults: true, testResults: 'test-results/junit.xml'
-      archiveArtifacts allowEmptyArchive: true, artifacts: 'playwright-report/**, test-results/**'
-      publishHTML([
-        allowMissing: true,
-        alwaysLinkToLastBuild: true,
-        keepAll: true,
-        reportDir: 'playwright-report',
-        reportFiles: 'index.html',
-        reportName: 'Playwright Report'
-      ])
+        stage('Run Playwright tests') {
+            steps {
+                sh 'npx playwright test'
+            }
+        }
     }
-  }
+
+    post {
+        always {
+            archiveArtifacts(
+                artifacts: 'playwright-report/**, test-results/**',
+                allowEmptyArchive: true
+            )
+        }
+    }
 }
