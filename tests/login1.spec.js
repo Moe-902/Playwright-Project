@@ -98,4 +98,5 @@ test('Add every item to cart and remove all then checkout', async ({ page }) => 
   await page.locator('[data-test="finish"]').click();
   console.log('Returning to products page');
   await page.locator('[data-test="back-to-products"]').click();
+  
 });
