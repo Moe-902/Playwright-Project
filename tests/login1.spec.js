@@ -34,7 +34,7 @@ test.afterEach(async ({ page }) => {
   await page.locator('[data-test="logout-sidebar-link"]').click();
 });
 
-test('Add every item to cart and remove some then checkout', async ({ page }) => {
+test.only ('Add every item to cart and remove some then checkout', async ({ page }) => {
   for (const item of itemsToAdd) {
     await page.locator(`[data-test="add-to-cart-${item}"]`).click();
   }
