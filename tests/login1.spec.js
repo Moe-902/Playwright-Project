@@ -22,7 +22,7 @@ const checkoutDetails = {
   postalCode: '123',
 };
 
-test.beforeAll(async ({ page }) => {
+test.beforeEach(async ({ page }) => {
   console.log('Opening Sauce Demo login page');
   await page.goto('https://www.saucedemo.com/');
   console.log(`Entering username: ${credentials.username}`);
@@ -33,7 +33,7 @@ test.beforeAll(async ({ page }) => {
   await page.locator('[data-test="login-button"]').click();
 });
 
-test.afterAll(async ({ page }) => {
+test.afterEach(async ({ page }) => {
   console.log('Opening application menu');
   await page.getByRole('button', { name: 'Open Menu' }).click();
   console.log('Logging out');
