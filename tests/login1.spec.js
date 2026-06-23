@@ -22,7 +22,7 @@ const checkoutDetails = {
   postalCode: '123',
 };
 
-test.beforeEach(async ({ page }) => {
+test.beforeAll(async ({ page }) => {
   console.log('Opening Sauce Demo login page');
   await page.goto('https://www.saucedemo.com/');
   console.log(`Entering username: ${credentials.username}`);
@@ -33,7 +33,7 @@ test.beforeEach(async ({ page }) => {
   await page.locator('[data-test="login-button"]').click();
 });
 
-test.afterEach(async ({ page }) => {
+test.afterAll(async ({ page }) => {
   console.log('Opening application menu');
   await page.getByRole('button', { name: 'Open Menu' }).click();
   console.log('Logging out');
@@ -75,7 +75,7 @@ test('Add every item to cart and remove all then checkout', async ({ page }) => 
     console.log(`Adding item to cart: ${item}`);
     await page.locator(`[data-test="add-to-cart-${item}"]`).click();
   }
-  
+
 
   console.log('Opening shopping cart');
   await page.locator('[data-test="shopping-cart-link"]').click();
